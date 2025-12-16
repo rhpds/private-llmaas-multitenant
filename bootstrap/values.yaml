@@ -59,3 +59,51 @@ llamaStackInstance:
   mcp:
     openshiftServerUrl: http://ocp-mcp-server.lls-demo.svc.cluster.local:8000/sse
     slackServerUrl: http://slack-mcp-server.lls-demo.svc.cluster.local:80/sse
+
+# Kubernetes MCP Server configuration
+kubernetesMcpServer:
+  repoURL: https://github.com/rhpds/private-llmaas-multitenant
+  targetRevision: taylor-testing
+  path: deployments/kubernetes-mcp-server
+  namespace: lls-demo
+
+# Llama Stack Operator configuration
+llamaStackOperator:
+  repoURL: https://github.com/rhpds/private-llmaas-multitenant
+  targetRevision: taylor-testing
+  path: llama-stack-operator
+  namespace: llama-stack-k8s-operator-controller-manager
+  image: quay.io/eformat/llama-stack-k8s-operator:v0.3.0
+
+# Llama Stack Shared configuration
+llamaStackShared:
+  repoURL: https://github.com/rhpds/private-llmaas-multitenant
+  targetRevision: taylor-testing
+  path: deployments/llama-stack
+  namespace: lls-demo
+
+# Slack MCP Server configuration
+slackMcp:
+  repoURL: https://github.com/rhpds/private-llmaas-multitenant
+  targetRevision: taylor-testing
+  path: deployments/slack-mcp
+  namespace: lls-demo
+
+# NVIDIA GPU Enablement configuration
+nvidiaGpuEnablement:
+  repoURL: https://github.com/rhpds/private-llmaas-multitenant
+  targetRevision: taylor-testing
+  path: deployments/nvidia-gpu-enablement
+  namespace: default
+  syncWave: "2"
+  retryLimit: 10
+  retryBackoffDuration: 10s
+  retryBackoffFactor: 3
+  retryBackoffMaxDuration: 30m
+
+# OpenShift AI configuration
+openshiftAi:
+  repoURL: https://github.com/rhpds/private-llmaas-multitenant
+  targetRevision: taylor-testing
+  path: deployments/openshift-ai
+  namespace: redhat-ods-operator

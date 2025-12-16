@@ -7,12 +7,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/rhpds/private-llmaas-multitenant
-    targetRevision: taylor-testing
-    path: deployments/slack-mcp
+    repoURL: {{ .Values.slackMcp.repoURL }}
+    targetRevision: {{ .Values.slackMcp.targetRevision }}
+    path: {{ .Values.slackMcp.path }}
   destination:
     server: https://kubernetes.default.svc
-    namespace: lls-demo
+    namespace: {{ .Values.slackMcp.namespace }}
   syncPolicy:
     automated: {}
     syncOptions:

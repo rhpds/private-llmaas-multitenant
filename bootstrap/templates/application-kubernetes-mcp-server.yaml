@@ -7,12 +7,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/rhpds/private-llmaas-multitenant
-    targetRevision: taylor-testing
-    path: deployments/kubernetes-mcp-server
+    repoURL: {{ .Values.kubernetesMcpServer.repoURL }}
+    targetRevision: {{ .Values.kubernetesMcpServer.targetRevision }}
+    path: {{ .Values.kubernetesMcpServer.path }}
   destination:
     server: https://kubernetes.default.svc
-    namespace: lls-demo
+    namespace: {{ .Values.kubernetesMcpServer.namespace }}
   syncPolicy:
     automated: {}
     syncOptions:

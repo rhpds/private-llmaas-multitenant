@@ -1,18 +1,20 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: openshift-ai
+  namespace: openshift-gitops
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     name: in-cluster
-    namespace: redhat-ods-operator
+    namespace: {{ .Values.openshiftAi.namespace }}
   project: default
   source:
-    path: deployments/openshift-ai
-    repoURL: https://github.com/rhpds/private-llmaas-multitenant
-    targetRevision: taylor-testing
+    path: {{ .Values.openshiftAi.path }}
+    repoURL: {{ .Values.openshiftAi.repoURL }}
+    targetRevision: {{ .Values.openshiftAi.targetRevision }}
   syncPolicy:
     automated:
       prune: true

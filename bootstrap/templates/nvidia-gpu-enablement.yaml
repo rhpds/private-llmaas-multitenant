@@ -3,26 +3,27 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: nvidia-gpu-enablement
+  namespace: openshift-gitops
   finalizers:
     - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: {{ .Values.nvidiaGpuEnablement.syncWave | quote }}
 spec:
   destination:
     name: in-cluster
-    namespace: default
+    namespace: {{ .Values.nvidiaGpuEnablement.namespace }}
   project: default
   source:
-    path: deployments/nvidia-gpu-enablement
-    repoURL: https://github.com/rhpds/private-llmaas-multitenant
-    targetRevision: taylor-testing
+    path: {{ .Values.nvidiaGpuEnablement.path }}
+    repoURL: {{ .Values.nvidiaGpuEnablement.repoURL }}
+    targetRevision: {{ .Values.nvidiaGpuEnablement.targetRevision }}
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     retry:
-      limit: 10
+      limit: {{ .Values.nvidiaGpuEnablement.retryLimit }}
       backoff:
-        duration: 10s
-        factor: 3
-        maxDuration: 30m
+        duration: {{ .Values.nvidiaGpuEnablement.retryBackoffDuration }}
+        factor: {{ .Values.nvidiaGpuEnablement.retryBackoffFactor }}
+        maxDuration: {{ .Values.nvidiaGpuEnablement.retryBackoffMaxDuration }}

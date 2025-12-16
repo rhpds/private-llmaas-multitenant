@@ -7,17 +7,17 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/rhpds/private-llmaas-multitenant
-    targetRevision: taylor-testing
-    path: llama-stack-operator
+    repoURL: {{ .Values.llamaStackOperator.repoURL }}
+    targetRevision: {{ .Values.llamaStackOperator.targetRevision }}
+    path: {{ .Values.llamaStackOperator.path }}
     helm:
       values: |
         operator:
-          image: quay.io/eformat/llama-stack-k8s-operator:v0.3.0
-          namespace: llama-stack-k8s-operator-controller-manager
+          image: {{ .Values.llamaStackOperator.image }}
+          namespace: {{ .Values.llamaStackOperator.namespace }}
   destination:
     server: https://kubernetes.default.svc
-    namespace: llama-stack-k8s-operator-controller-manager
+    namespace: {{ .Values.llamaStackOperator.namespace }}
   syncPolicy:
     automated: {}
     syncOptions:
