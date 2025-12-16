@@ -1,4 +1,3 @@
-{{ if .Values.workspace -}}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -15,21 +14,18 @@ spec:
 {{- end }}
   template:
     metadata:
-      name: workspace-{{- "{{" }} user {{- " }}" }}
+      name: workspace-{{ `{{ user }}` }}
       namespace: openshift-gitops
     spec:
       project: default
       source:
-        repoURL: {{ .Values.workspace.git.url }}
-        targetRevision: {{ .Values.workspace.git.revision }}
-        path: {{ .Values.workspace.git.path }}
+        repoURL: {{ .Values.bootstrap.repoURL }}
+        targetRevision: {{ .Values.bootstrap.targetRevision }}
+        path: deployments/workspace
         helm:
           values: |
-            username: '{{- "{{" }} user {{- " }}" }}'
-            devworkspace:
-              {{- toYaml .Values.workspace.devworkspace | nindent 14 }}
+            username: {{ `{{ user }}` }}
       destination:
         server: https://kubernetes.default.svc
       syncPolicy:
         automated: {}
-{{- end }}

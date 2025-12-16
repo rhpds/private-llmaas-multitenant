@@ -7,8 +7,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/rhpds/private-llmaas-multitenant
-    targetRevision: taylor-testing
+    repoURL: {{ .Values.bootstrap.repoURL}}
+    targetRevision: {{ .Values.bootstrap.targetRevision }}
     path: deployments/kubernetes-mcp-server
   destination:
     server: https://kubernetes.default.svc

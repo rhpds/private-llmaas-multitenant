@@ -3,7 +3,7 @@ apiVersion: workspace.devfile.io/v1alpha2
 kind: DevWorkspace
 metadata:
   name: {{ .Values.devworkspace.name }}
-  namespace: {{ .Values.namespace }}-{{ .Values.username }}
+  namespace: {{ .Values.namespacePrefix }}-{{ .Values.username }}
 spec:
   routingClass: che
   started: true

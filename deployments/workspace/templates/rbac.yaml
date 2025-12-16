@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: wksp-edit-{{ .Values.username }}
-  namespace: wksp-{{ .Values.username }}
+  namespace: {{ .Values.namespacePrefix }}-{{ .Values.username }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -12,39 +12,3 @@ subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
   name: {{ .Values.username }}
-# ---
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: Role
-# metadata:
-#   name: wksp-viewer-{{ .Values.username }}
-#   namespace: wksp-{{ .Values.username }}
-# rules:
-# - apiGroups: ["rbac.authorization.k8s.io"]
-#   resources: ["rolebindings"]
-#   verbs: ["get", "list", "watch", "create"]
-# - apiGroups: ["rbac.authorization.k8s.io"]
-#   resources: ["roles"]
-#   verbs: ["get", "list", "watch"]
-# - apiGroups: ["rbac.authorization.k8s.io"]
-#   resources: ["clusterroles"]
-#   verbs: ["get", "list", "watch"]
-# - apiGroups: ["tekton.dev"]
-#   resources: ["tasks", "taskruns"]
-#   verbs: ["get", "list", "watch"]
-# - apiGroups: ["triggers.tekton.dev"]
-#   resources: ["eventlisteners"]
-#   verbs: ["get", "list", "watch"]
-# ---
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: RoleBinding
-# metadata:
-#   name: wksp-viewer-{{ .Values.username }}
-#   namespace: wksp-{{ .Values.username }}
-# roleRef:
-#   apiGroup: rbac.authorization.k8s.io
-#   kind: Role
-#   name: wksp-viewer-{{ .Values.username }}
-# subjects:
-# - apiGroup: rbac.authorization.k8s.io
-#   kind: User
-#   name: {{ .Values.username }}

@@ -5,8 +5,6 @@ metadata:
   name: nvidia-gpu-enablement
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   destination:
     name: in-cluster
@@ -15,7 +13,7 @@ spec:
   source:
     path: charts/nvidia-gpu-enablement
     repoURL: https://github.com/jharmison-redhat/openshift-setup
-    targetRevision: main
+    targetRevision: d5030a5eee9ee5fa6558293862237593d0a069ca
   syncPolicy:
     automated:
       prune: true

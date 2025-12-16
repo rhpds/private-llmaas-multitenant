@@ -9,13 +9,16 @@ spec:
     name: in-cluster
     namespace: redhat-ods-operator
   project: default
-  source:
-    path: deployments/openshift-ai
+  sources:
+  - path: charts/openshift-ai
     repoURL: https://github.com/jharmison-redhat/openshift-setup
-    targetRevision: main
+    targetRevision: d5030a5eee9ee5fa6558293862237593d0a069ca
     helm:
       valueFiles:
-        - deployments/openshift-ai/values.yaml
+        - $values/deployments/openshift-ai/values.yaml
+  - repoURL: {{ .Values.bootstrap.repoURL }}
+    targetRevision: {{ .Values.bootstrap.targetRevision }}
+    ref: values
   syncPolicy:
     automated:
       prune: true

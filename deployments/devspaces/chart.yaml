@@ -5,4 +5,4 @@ description: >
   A helm chart to deploy the OpenShift DevSpaces operator
 type: application
 version: 0.1.0
-appVersion: 3.25.0
+appVersion: 0.1.0
