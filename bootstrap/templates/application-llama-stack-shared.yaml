@@ -1,0 +1,19 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: llama-stack-shared
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/rhpds/private-llmaas-multitenant
+    targetRevision: taylor-testing
+    path: deployments/llama-stack
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: lls-demo
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true

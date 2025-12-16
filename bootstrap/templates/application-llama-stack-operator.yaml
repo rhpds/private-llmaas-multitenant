@@ -1,0 +1,24 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: llama-stack-operator
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/rhpds/private-llmaas-multitenant
+    targetRevision: taylor-testing
+    path: llama-stack-operator
+    helm:
+      values: |
+        operator:
+          image: quay.io/eformat/llama-stack-k8s-operator:v0.3.0
+          namespace: llama-stack-k8s-operator-controller-manager
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: llama-stack-k8s-operator-controller-manager
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
