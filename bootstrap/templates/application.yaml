@@ -4,12 +4,18 @@ kind: Application
 metadata:
   name: bootstrap
   namespace: openshift-gitops
+  annotations:
+    # Keep this resource when Helm uninstalls - ArgoCD will manage it
+    helm.sh/resource-policy: keep
 spec:
   project: default
   source:
     repoURL: {{ .Values.bootstrap.repoURL }}
     targetRevision: {{ .Values.bootstrap.targetRevision }}
     path: {{ .Values.bootstrap.path }}
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     namespace: openshift-gitops
     server: https://kubernetes.default.svc
@@ -25,4 +31,3 @@ spec:
       jsonPointers:
         - /spec/syncPolicy/automated
         - /spec/syncPolicy/ignoreDifferences
-
