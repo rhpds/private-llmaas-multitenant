@@ -1,4 +1,4 @@
-image: quay.io/modh/vllm:rhoai-2.23-cuda
+image: registry.redhat.io/rhaiis/vllm-cuda-rhel9:3.2.5
 
 models:
   - name: granite-3dot2-8b-instruct
