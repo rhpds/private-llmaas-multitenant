@@ -16,6 +16,8 @@ spec:
     name: in-cluster
     namespace: llm
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
