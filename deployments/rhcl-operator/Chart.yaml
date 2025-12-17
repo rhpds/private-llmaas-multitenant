@@ -1,0 +1,6 @@
+apiVersion: v2
+name: rhcl-operator
+description: Deployment of the Red Hat Connectivity Link operator
+type: application
+version: 1.0.0
+appVersion: "0.1.0"
