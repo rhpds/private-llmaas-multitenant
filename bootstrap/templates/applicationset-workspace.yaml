@@ -28,7 +28,7 @@ spec:
           values: |
             username: {{ `{{ user }}` }}
       destination:
-        server: https://kubernetes.default.svc
+        name: in-cluster
       syncPolicy:
         automated:
           prune: true

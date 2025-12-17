@@ -9,7 +9,7 @@ metadata:
 spec:
   destination:
     namespace: maas-api
-    server: in-cluster
+    name: in-cluster
   project: default
   source:
     path: deployment/overlays/openshift

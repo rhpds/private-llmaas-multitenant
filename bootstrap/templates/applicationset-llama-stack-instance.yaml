@@ -42,7 +42,7 @@ spec:
               openshiftServerUrl: {{ .Values.llamaStackInstance.mcp.openshiftServerUrl }}
               slackServerUrl: {{ .Values.llamaStackInstance.mcp.slackServerUrl }}
       destination:
-        server: https://kubernetes.default.svc
+        name: in-cluster
       syncPolicy:
         automated: {}
         syncOptions:

@@ -13,7 +13,7 @@ spec:
     targetRevision: {{ .Values.bootstrap.targetRevision }}
     path: deployments/slack-mcp
   destination:
-    server: in-cluster
+    name: in-cluster
     namespace: lls-demo
   syncPolicy:
     automated: {}
