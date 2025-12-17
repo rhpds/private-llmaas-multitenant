@@ -1,0 +1,38 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: models-as-a-service
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: maas-api
+    server: in-cluster
+  project: default
+  source:
+    path: deployment/overlays/openshift
+    repoURL: https://github.com/models-as-a-service.git
+    targetRevision: 39e62e98f382621e401211ae21cb9de0601b8266
+    kustomize:
+      patches:
+        - target:
+            kind: Gateway
+            name: maas-default-gateway
+          patch: |-
+            - op: replace
+              path: /spec/listeners/0/hostname
+              value: maas.{{ .Values.deployer.domain }}
+            - op: replace
+              path: /spec/listeners/1/hostname
+              value: maas.{{ .Values.deployer.domain }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        argocd.argoproj.io/managed-by: openshift-gitops

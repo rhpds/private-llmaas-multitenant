@@ -6,16 +6,18 @@ metadata:
   namespace: openshift-gitops
 spec:
   generators:
-  - list:
-      elements:
-{{- $userCount := int .Values.user.count }}
-{{- range $index := until $userCount }}
-      - user: {{ $.Values.user.prefix }}{{ add $index 1}}
-{{- end }}
+    - list:
+        elements:
+        {{- $userCount := int .Values.user.count }}
+        {{- range $index := until $userCount }}
+          - user: {{ $.Values.user.prefix }}{{ add $index 1}}
+        {{- end }}
   template:
     metadata:
       name: workspace-{{ `{{ user }}` }}
       namespace: openshift-gitops
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
     spec:
       project: default
       source:

@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: kubernetes-mcp-server
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -11,7 +13,7 @@ spec:
     targetRevision: {{ .Values.bootstrap.targetRevision }}
     path: deployments/kubernetes-mcp-server
   destination:
-    server: https://kubernetes.default.svc
+    name: in-cluster
     namespace: lls-demo
   syncPolicy:
     automated: {}

@@ -4,5 +4,7 @@ kind: ArgoCD
 metadata:
   name: openshift-gitops
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   resourceTrackingMethod: annotation
