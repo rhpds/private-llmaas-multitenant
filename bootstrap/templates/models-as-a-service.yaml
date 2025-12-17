@@ -27,6 +27,9 @@ spec:
             - op: replace
               path: /spec/listeners/1/hostname
               value: maas.{{ .Values.deployer.domain }}
+            - op: replace
+              path: /spec/listeners/1/tls/certificateRefs/0/name
+              value: cert-manager-ingress-cert
   syncPolicy:
     automated:
       prune: true
