@@ -8,10 +8,16 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: {{ .Values.bootstrap.repoURL}}
-    targetRevision: {{ .Values.bootstrap.targetRevision }}
-    path: deployments/kubernetes-mcp-server
+  sources:
+    - repoURL: oci://ghcr.io/containers/charts
+      targetRevision: 0.1.0
+      path: .
+      helm:
+        valueFiles:
+          - $values/deployments/kubernetes-mcp-server/values.yaml
+    - repoURL: {{ .Values.bootstrap.repoURL}}
+      targetRevision: {{ .Values.bootstrap.targetRevision }}
+      ref: values
   destination:
     name: in-cluster
     namespace: lls-demo
@@ -19,4 +25,3 @@ spec:
     automated: {}
     syncOptions:
       - CreateNamespace=true
-
