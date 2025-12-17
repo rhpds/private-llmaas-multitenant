@@ -24,39 +24,11 @@ spec:
   template:
     containers:
     - name: main
-      resources:
-        {{- toYaml .resources | nindent 8 }}
-      readinessProbe:
-        httpGet:
-          path: /health
-          port: 8000
-          scheme: HTTPS
+      image: {{ .image | default $.Values.image }}
       command:
       - python
       - -m
       - vllm.entrypoints.openai.api_server
-      livenessProbe:
-        httpGet:
-          path: /health
-          port: 8000
-          scheme: HTTPS
-      env:
-      - name: HF_HOME
-        value: /tmp/hf_home
-      - name: VLLM_ATTENTION_BACKEND
-        value: XFORMERS
-      - name: VLLM_USE_V1
-        value: "0"
-      - name: VLLM_PORT
-        value: "8000"
-      ports:
-      - containerPort: 8000
-        name: http
-        protocol: TCP
-      volumeMounts:
-      - mountPath: /dev/shm
-        name: shm
-      image: {{ .image | default $.Values.image }}
       args:
       - "--served-model-name={{ `{{.Name}}` }}"
       - --model=/mnt/models
@@ -64,6 +36,25 @@ spec:
       - --ssl-certfile=/var/run/kserve/tls/tls.crt
       - --ssl-keyfile=/var/run/kserve/tls/tls.key
       {{- toYaml .extraArgs | nindent 6 }}
+      ports:
+      - containerPort: 8080
+        name: http
+        protocol: TCP
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTPS
+      readinessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTPS
+      resources:
+        {{- toYaml .resources | nindent 8 }}
+      volumeMounts:
+      - mountPath: /dev/shm
+        name: shm
     nodeSelector:
       nvidia.com/gpu.present: "true"
     tolerations:
