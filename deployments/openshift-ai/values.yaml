@@ -1,41 +1,11 @@
 channel: fast-3.x
 
-components:
-  kserve:
-    nim:
-      managementState: Removed
-    rawDeploymentServiceConfig: Headless
-    managementState: Managed
-  modelregistry:
-    registriesNamespace: rhoai-model-registries
-    managementState: Managed
-  feastoperator:
-    managementState: Removed
-  trustyai:
-    eval:
-      lmeval:
-        permitCodeExecution: deny
-        permitOnline: deny
-    managementState: Managed
-  aipipelines:
-    argoWorkflowsControllers:
+dataScienceCluster:
+  components: 
+    llamastackoperator:
       managementState: Managed
-    managementState: Managed
-  ray:
-    managementState: Removed
-  kueue:
-    defaultClusterQueueName: default
-    defaultLocalQueueName: default
-    managementState: Removed
-  workbenches:
-    workbenchNamespace: rhods-notebooks
-    managementState: Managed
-  dashboard:
-    managementState: Managed
-  llamastackoperator:
-    managementState: Managed
-  trainingoperator:
-    managementState: Removed
+    trainingoperator: 
+      managementState: Removed
 
 dataScienceClusterInitialization: null
 
