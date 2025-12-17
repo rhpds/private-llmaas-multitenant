@@ -9,7 +9,7 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: oci://ghcr.io/containers/charts
+    - repoURL: oci://ghcr.io/containers/charts/kubernetes-mcp-server
       targetRevision: 0.1.0
       path: .
       helm:
