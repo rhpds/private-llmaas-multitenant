@@ -1,2 +1,4 @@
 .claude
 CLAUDE.md
+Chart.lock
+deployments/*/charts
