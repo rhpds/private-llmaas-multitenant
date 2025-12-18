@@ -1,9 +1,9 @@
 image: registry.redhat.io/rhaiis/vllm-cuda-rhel9:3.2.5
 
 models:
-  - name: qwen3-14b-fp8
-    displayName: Qwen3 14B FP8
-    uri: oci://quay.io/jharmison/models:qwen--qwen3-14b-fp8-modelcar
+  - name: qwen3-4b-instruct
+    displayName: Qwen3 4B Instruct 2507
+    uri: oci://quay.io/jharmison/models:qwen--qwen3-4b-instruct-2507-modelcar
     resources:
       limits:
         cpu: "6"
