@@ -104,6 +104,7 @@ spec:
         path: /checode
     name: che-code-runtime-description
   - name: checode
+    volume: {}
   events:
     postStart:
     - init-che-code-command
