@@ -16,6 +16,8 @@ models:
     extraArgs:
       - --enable-auto-tool-choice
       - --tool-call-parser=hermes
+      - --max-model-len=120000
+      - --gpu-memory-utilization=0.95
     tolerations:
       - effect: NoSchedule
         key: nvidia.com/gpu
