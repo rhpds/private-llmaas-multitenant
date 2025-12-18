@@ -1,9 +1,9 @@
 # Slack MCP Server Configuration
 
 image:
-  repository: quay.io/redhat-et/slack-mcp-server
-  tag: latest
-  pullPolicy: Always
+  repository: ghcr.io/korotovsky/slack-mcp-server
+  tag: v1.1.28
+  pullPolicy: IfNotPresent
 
 replicaCount: 1
 
@@ -18,7 +18,6 @@ slack:
   existingSecret: ""
   # Option 2: Create secret with provided values (not recommended for production)
   botToken: "xoxb-"
-  teamId: "T..."
 
 resources:
   limits:

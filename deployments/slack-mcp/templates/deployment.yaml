@@ -18,26 +18,21 @@ spec:
       - name: slack-mcp-server
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          npx -y supergateway --stdio "node dist/index.js" --port {{ .Values.service.targetPort }}
         ports:
         - containerPort: {{ .Values.service.targetPort }}
           protocol: TCP
         env:
-        - name: NPM_CONFIG_CACHE
-          value: /tmp/.npm
-        - name: SLACK_BOT_TOKEN
+        - name: SLACK_MCP_PORT
+          value: {{ quote .Values.service.targetPort }}
+        - name: SLACK_MCP_HOST
+          value: 0.0.0.0
+        - name: SLACK_MCP_ADD_MESSAGE_TOOL
+          value: "true"
+        - name: SLACK_MCP_XOXB_TOKEN
           valueFrom:
             secretKeyRef:
               name: {{ include "slack-mcp.secretName" . }}
               key: slack-bot-token
-        - name: SLACK_TEAM_ID
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "slack-mcp.secretName" . }}
-              key: slack-team-id
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10 }}

@@ -9,4 +9,5 @@ keywords:
   - model-context-protocol
   - slack
 maintainers:
-  - name: Red Hat AI BU
+  - name: Taylor Smith
+    email: tasmith@redhat.com
