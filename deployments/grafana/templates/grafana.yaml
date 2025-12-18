@@ -5,6 +5,8 @@ metadata:
   name: grafana
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app.kubernetes.io/instance: grafana
 spec:
   config:
     analytics:
