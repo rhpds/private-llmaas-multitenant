@@ -27,6 +27,8 @@ spec:
         helm:
           values: |
             username: {{ `{{ user }}` }}
+            deployer:
+              domain: {{ .Values.deployer.domain }}
       destination:
         name: in-cluster
       syncPolicy:
