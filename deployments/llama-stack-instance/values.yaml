@@ -5,10 +5,6 @@
 deployer:
   domain: apps.cluster.example.com
 # Model configuration
-models:
-  inference:
-    name: qwen3-4b-instruct
-    displayName: Qwen 3 4B Instruct 2507
-  safety:
-    name: llama-guard-3-1b
-    displayName: Llama Guard 3 1B
+model:
+  name: qwen3-4b-instruct
+  displayName: Qwen 3 4B Instruct 2507

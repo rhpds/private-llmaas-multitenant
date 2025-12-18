@@ -30,14 +30,7 @@ data:
           api_token: ${env.VLLM_API_TOKEN_1:=fake}
           max_tokens: ${env.VLLM_MAX_TOKENS:=8192}
           tls_verify: ${env.VLLM_TLS_VERIFY:=true}
-          url: http://maas.{{ .Values.deployer.domain }}/llm/{{ .Values.models.inference.name }}/v1
-      - provider_id: maas-vllm-safety-1
-        provider_type: remote::vllm
-        config:
-          api_token: ${env.VLLM_API_TOKEN_2:=fake}
-          max_tokens: ${env.VLLM_MAX_TOKENS:=4096}
-          tls_verify: ${env.VLLM_TLS_VERIFY:=true}
-          url: http://maas.{{ .Values.deployer.domain }}/llm/{{ .Values.models.safety.name }}/v1
+          url: http://maas.{{ .Values.deployer.domain }}/llm/{{ .Values.model.name }}/v1
       vector_io:
       - provider_id: milvus
         provider_type: inline::milvus
@@ -75,11 +68,6 @@ data:
             db_path: /opt/app-root/src/.llama/distributions/rh/huggingface_datasetio.db
             namespace: null
             type: sqlite
-      safety:
-      - provider_id: maas-vllm-safety-1
-        provider_type: inline::llama-guard
-        config:
-          excluded_categories: []
       scoring:
       - provider_id: basic
         provider_type: inline::basic
@@ -105,17 +93,11 @@ data:
       metadata:
         embedding_dimension: 768
     - provider_id: maas-vllm-inference-1
-      model_id: {{ .Values.models.inference.name }}
+      model_id: {{ .Values.model.name }}
       model_type: llm
       metadata:
-        display_name: {{ .Values.models.inference.displayName }}
-    - provider_id: maas-vllm-safety-1
-      model_id: {{ .Values.models.safety.name }}
-      model_type: llm
-      metadata:
-        display_name: {{ .Values.models.safety.displayName }}
-    shields:
-    - shield_id: {{ .Values.models.safety.name }}
+        display_name: {{ .Values.model.displayName }}
+    shields: []
     vector_dbs: []
     datasets: []
     scoring_fns: []
