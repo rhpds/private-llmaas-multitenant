@@ -6,7 +6,6 @@ metadata:
   labels:
     opendatahub.io/dashboard: "true"
   name: lsd-genai-playground
-  namespace: wksp-{{ .Values.username }}
 spec:
   replicas: 1
   server:

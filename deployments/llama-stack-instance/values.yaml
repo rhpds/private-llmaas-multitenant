@@ -1,9 +1,6 @@
 # Default values for llama-stack-instance
 # This is a YAML-formatted file.
 
-# Username for this instance (will be overridden by ApplicationSet)
-username: user1
-
 # Cluster configuration, for templating routes
 deployer:
   domain: apps.cluster.example.com
