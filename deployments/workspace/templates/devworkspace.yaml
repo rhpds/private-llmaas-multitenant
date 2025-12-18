@@ -20,3 +20,5 @@ spec:
           revision: {{ .Values.devworkspace.projects.revision }}
     components:
     {{- toYaml .Values.devworkspace.components | nindent 4 }}
+    attributes:
+      controller.devfile.io/storage-type: per-user
