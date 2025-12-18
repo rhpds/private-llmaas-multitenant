@@ -8,7 +8,7 @@ spec:
   routingClass: che
   started: true
   contributions:
-  - name: ide
+  - name: editor
     uri: {{ .Values.devworkspace.devfile }}
   template:
     projects:
