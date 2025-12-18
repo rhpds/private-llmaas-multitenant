@@ -11,6 +11,6 @@ data:
     }
   Slack-MCP-Server: |
     {
-      "url": "http://slack-mcp-server.lls-demo.svc.cluster.local/sse",
+      "url": "http://slack-mcp-server.lls-demo.svc.cluster.local/mcp",
       "description": "An MCP server for interacting with our workshop Slack instance."
     }
