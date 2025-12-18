@@ -4,20 +4,14 @@
 # Username for this instance (will be overridden by ApplicationSet)
 username: user1
 
+# Cluster configuration, for templating routes
+deployer:
+  domain: apps.cluster.example.com
 # Model configuration
-granite:
-  modelName: granite-3dot2-8b-instruct
-  endpoint: ""
-  apiToken: ""
-  tlsverify: true
-
-llamaguard:
-  modelName: llama-guard-3-1b
-  endpoint: ""
-  apiToken: ""
-  tlsverify: true
-
-# Shared MCP server configuration
-mcp:
-  openshiftServerUrl: http://ocp-mcp-server.lls-mcp.svc.cluster.local:8000/sse
-  slackServerUrl: http://slack-mcp-server.lls-mcp.svc.cluster.local:80/sse
+models:
+  inference:
+    name: qwen3-4b-instruct
+    displayName: Qwen 3 4B Instruct 2507
+  safety:
+    name: llama-guard-3-1b
+    displayName: Llama Guard 3 1B

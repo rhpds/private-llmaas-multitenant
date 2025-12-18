@@ -1,93 +1,83 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
   name: llama-stack-config
-  namespace: lls-{{ .Values.username }}
+  namespace: wksp-{{ .Values.username }}
+  labels:
+    llamastack.io/distribution: lsd-genai-playground
+    opendatahub.io/dashboard: "true"
 data:
   run.yaml: |
-    version: '2'
+    # Llama Stack Configuration
+    version: "2"
     image_name: rh
     apis:
     - agents
     - datasetio
-    - eval
+    - files
     - inference
     - safety
     - scoring
     - tool_runtime
     - vector_io
-    - telemetry
-    - files
     providers:
       inference:
-      - provider_id: vllm
-        provider_type: remote::vllm
-        config:
-          url: ${env.GRANITE_URL}
-          tls_verify: {{ .Values.granite.tlsverify }}
-          api_token: ${env.GRANITE_TOKEN}
       - provider_id: sentence-transformers
         provider_type: inline::sentence-transformers
         config: {}
-      - provider_id: vllm-safety
+      - provider_id: maas-vllm-inference-1
         provider_type: remote::vllm
         config:
-          url: ${env.SAFETY_MODEL}
-          max_tokens: 4096
-          api_token: ${env.VLLM_API_TOKEN}
-          tls_verify: {{ .Values.llamaguard.tlsverify }}
+          api_token: ${env.VLLM_API_TOKEN_1:=fake}
+          max_tokens: ${env.VLLM_MAX_TOKENS:=8192}
+          tls_verify: ${env.VLLM_TLS_VERIFY:=true}
+          url: http://maas.{{ .Values.deployer.domain }}/llm/{{ .Values.models.inference.name }}/v1
+      - provider_id: maas-vllm-safety-1
+        provider_type: remote::vllm
+        config:
+          api_token: ${env.VLLM_API_TOKEN_2:=fake}
+          max_tokens: ${env.VLLM_MAX_TOKENS:=4096}
+          tls_verify: ${env.VLLM_TLS_VERIFY:=true}
+          url: http://maas.{{ .Values.deployer.domain }}/llm/{{ .Values.models.safety.name }}/v1
+      vector_io:
+      - provider_id: milvus
+        provider_type: inline::milvus
+        config:
+          db_path: /opt/app-root/src/.llama/distributions/rh/milvus.db
+          kvstore:
+            db_path: /opt/app-root/src/.llama/distributions/rh/milvus_registry.db
+            namespace: null
+            type: sqlite
       agents:
       - provider_id: meta-reference
         provider_type: inline::meta-reference
         config:
           persistence_store:
-            type: sqlite
-            db_path: /tmp/llama-stack/agents_store.db
-          responses_store:
-            type: sqlite
-            db_path: /tmp/llama-stack/responses_store.db
-      eval:
-      - provider_id: meta-reference
-        provider_type: inline::meta-reference
-        config:
-          kvstore:
-            type: sqlite
+            db_path: /opt/app-root/src/.llama/distributions/rh/agents_store.db
             namespace: null
-            db_path: /tmp/llama-stack/meta_reference_eval.db
+            type: sqlite
+          responses_store:
+            db_path: /opt/app-root/src/.llama/distributions/rh/responses_store.db
+            type: sqlite
+      eval: []
+      files:
+      - provider_id: meta-reference-files
+        provider_type: inline::localfs
+        config:
+          metadata_store:
+            db_path: /opt/app-root/src/.llama/distributions/rh/files_metadata.db
+            type: sqlite
+          storage_dir: /opt/app-root/src/.llama/distributions/rh/files
       datasetio:
       - provider_id: huggingface
         provider_type: remote::huggingface
         config:
           kvstore:
-            type: sqlite
+            db_path: /opt/app-root/src/.llama/distributions/rh/huggingface_datasetio.db
             namespace: null
-            db_path: /tmp/llama-stack/huggingface_datasetio.db
-      - provider_id: localfs
-        provider_type: inline::localfs
-        config:
-          kvstore:
             type: sqlite
-            namespace: null
-            db_path: /tmp/llama-stack/localfs_datasetio.db
-      vector_io:
-      - provider_id: faiss
-        provider_type: inline::faiss
-        config:
-          kvstore:
-            type: sqlite
-            db_path: /tmp/llama-stack/faiss_store.db
-      files:
-      - provider_id: localfs
-        provider_type: inline::localfs
-        config:
-          storage_dir: /tmp/llama-stack/files
-          metadata_store:
-            type: sqlite
-            db_path: /tmp/llama-stack/files_metadata.db
       safety:
-      - provider_id: llama-guard
+      - provider_id: maas-vllm-safety-1
         provider_type: inline::llama-guard
         config:
           excluded_categories: []
@@ -98,25 +88,7 @@ data:
       - provider_id: llm-as-judge
         provider_type: inline::llm-as-judge
         config: {}
-      - provider_id: braintrust
-        provider_type: inline::braintrust
-        config:
-          openai_api_key: ${env.OPENAI_API_KEY:}
-      telemetry:
-      - provider_id: meta-reference
-        provider_type: inline::meta-reference
-        config:
-          service_name: ${env.OTEL_SERVICE_NAME:llama-stack}
-          sinks:
-            - console
-          otel_trace_endpoint: ${env.OTEL_TRACE_ENDPOINT:}
-          sqlite_db_path: /tmp/llama-stack/trace_store.db
       tool_runtime:
-      - provider_id: tavily-search
-        provider_type: remote::tavily-search
-        config: {}
-          #api_key: ${env.TAVILY_API_KEY}
-          #max_results: 3
       - provider_id: rag-runtime
         provider_type: inline::rag-runtime
         config: {}
@@ -125,39 +97,32 @@ data:
         config: {}
     metadata_store:
       type: sqlite
-      db_path: /tmp/llama-stack/registry.db
+      db_path: /opt/app-root/src/.llama/distributions/rh/inference_store.db
     models:
-    - metadata: {}
-      model_id: "{{ .Values.granite.modelName }}"
-      provider_id: vllm
-      provider_model_id: "{{ .Values.granite.modelName }}"
-      model_type: llm
-    - metadata:
-        embedding_dimension: 384
-      model_id: all-MiniLM-L6-v2
-      provider_id: sentence-transformers
+    - provider_id: sentence-transformers
+      model_id: granite-embedding-125m
+      provider_model_id: ibm-granite/granite-embedding-125m-english
       model_type: embedding
-    - metadata: {}
-      model_id: "{{ .Values.llamaguard.modelName }}"
-      provider_model_id: "{{ .Values.llamaguard.modelName }}"
-      provider_id: vllm-safety
+      metadata:
+        embedding_dimension: 768
+    - provider_id: maas-vllm-inference-1
+      model_id: {{ .Values.models.inference.name }}
       model_type: llm
-    datasets: []
+      metadata:
+        display_name: {{ .Values.models.inference.displayName }}
+    - provider_id: maas-vllm-safety-1
+      model_id: {{ .Values.models.safety.name }}
+      model_type: llm
+      metadata:
+        display_name: {{ .Values.models.safety.displayName }}
+    shields:
+    - shield_id: {{ .Values.models.safety.name }}
     vector_dbs: []
+    datasets: []
     scoring_fns: []
     benchmarks: []
-    shields:
-    - shield_id: "{{ .Values.llamaguard.modelName }}"
     tool_groups:
-    - provider_id: tavily-search
-      toolgroup_id: builtin::websearch
     - toolgroup_id: builtin::rag
       provider_id: rag-runtime
-    - toolgroup_id: mcp::openshift
-      provider_id: model-context-protocol
-      mcp_endpoint:
-        uri: {{ .Values.mcp.openshiftServerUrl }}
-    - toolgroup_id: mcp::slack
-      provider_id: model-context-protocol
-      mcp_endpoint:
-        uri: {{ .Values.mcp.slackServerUrl }}
+    server:
+      port: 8321

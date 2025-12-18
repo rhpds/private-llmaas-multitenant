@@ -2,26 +2,41 @@ apiVersion: llamastack.io/v1alpha1
 kind: LlamaStackDistribution
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
-    argocd.argoproj.io/compare-options: IgnoreExtraneous
-    argocd.argoproj.io/sync-options: Prune=false
-  name: llamastack-{{ .Values.username }}
-  namespace: lls-{{ .Values.username }}
+    openshift.io/display-name: lsd-genai-playground
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: lsd-genai-playground
+  namespace: wksp-{{ .Values.username }}
 spec:
   replicas: 1
   server:
     containerSpec:
+      command:
+      - /bin/sh
+      - -c
+      - llama stack run /etc/llama-stack/run.yaml
       env:
-        - name: GRANITE_URL
-          value: '{{ .Values.granite.endpoint }}'
-        - name: GRANITE_TOKEN
-          value: '{{ .Values.granite.apiToken }}'
-        - name: SAFETY_MODEL
-          value: '{{ .Values.llamaguard.endpoint }}'
-        - name: VLLM_API_TOKEN
-          value: '{{ .Values.llamaguard.apiToken }}'
+      - name: VLLM_TLS_VERIFY
+        value: "false"
+      - name: MILVUS_DB_PATH
+        value: ~/.llama/milvus.db
+      - name: FMS_ORCHESTRATOR_URL
+        value: http://localhost
+      - name: VLLM_MAX_TOKENS
+        value: "8192"
+      - name: VLLM_API_TOKEN_1
+        value: fake
+      - name: LLAMA_STACK_CONFIG_DIR
+        value: /opt/app-root/src/.llama/distributions/rh/
       name: llama-stack
       port: 8321
+      resources:
+        limits:
+          cpu: "2"
+          memory: 12Gi
+        requests:
+          cpu: 250m
+          memory: 500Mi
     distribution:
       name: rh-dev
     userConfig:
