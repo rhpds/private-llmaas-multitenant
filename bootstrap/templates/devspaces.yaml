@@ -13,7 +13,7 @@ spec:
   project: default
   source:
     path: deployments/devspaces
-    repoURL: {{ .Values.bootstrap.repoURL}}
+    repoURL: {{ .Values.bootstrap.repoURL }}
     targetRevision: {{ .Values.bootstrap.targetRevision }}
   syncPolicy:
     automated:

@@ -13,8 +13,8 @@ spec:
   project: default
   source:
     path: deployments/rhcl-operator
-    repoURL: https://github.com/rhpds/private-llmaas-multitenant.git
-    targetRevision: taylor-testing
+    repoURL: {{ .Values.bootstrap.repoURL }}
+    targetRevision: {{ .Values.bootstrap.targetRevision }}
   syncPolicy:
     automated:
       prune: true

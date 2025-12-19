@@ -9,12 +9,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: {{ .Values.bootstrap.repoURL}}
+    repoURL: {{ .Values.bootstrap.repoURL }}
     targetRevision: {{ .Values.bootstrap.targetRevision }}
     path: deployments/slack-mcp
     helm:
-      valuesObject: 
-        slack: 
+      valuesObject:
+        slack:
           botToken: {{ .Values.slackMcpSecret.slackBotToken }}
   destination:
     name: in-cluster
