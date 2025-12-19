@@ -9,7 +9,7 @@ metadata:
   name: create-kuadrant-kuadrant-admin
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: kuadrants.kuadrant.io-v1beta1-admin
 subjects:
   - kind: ServiceAccount
@@ -22,7 +22,7 @@ metadata:
   namespace: openshift-operators
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: aggregate-olm-view
 subjects:
   - kind: ServiceAccount
