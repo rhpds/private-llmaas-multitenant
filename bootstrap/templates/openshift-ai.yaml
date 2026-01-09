@@ -28,5 +28,7 @@ spec:
     syncOptions:
       - CreateNamespace=true
     managedNamespaceMetadata:
+      annotations:
+        openshift.io/cluster-monitoring: 'true'
       labels:
         argocd.argoproj.io/managed-by: openshift-gitops
