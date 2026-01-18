@@ -30,6 +30,13 @@ spec:
             - op: replace
               path: /spec/listeners/1/tls/certificateRefs/0/name
               value: cert-manager-ingress-cert
+        - target:
+            kind: Deployment
+            name: maas-api
+          patch: |-
+            - op: replace
+              path: /spec/template/spec/containers/0/image
+              value: quay.io/opendatahub/maas-api:latest-852dcd2
   syncPolicy:
     automated:
       prune: true
