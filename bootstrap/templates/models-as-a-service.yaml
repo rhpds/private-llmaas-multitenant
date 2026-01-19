@@ -36,7 +36,7 @@ spec:
           patch: |-
             - op: replace
               path: /spec/template/spec/containers/0/image
-              value: quay.io/opendatahub/maas-api:latest-852dcd2
+              value: quay.io/opendatahub/maas-api:latest-0681979
   syncPolicy:
     automated:
       prune: true
