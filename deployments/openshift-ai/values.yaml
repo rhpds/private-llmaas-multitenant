@@ -1,21 +1,26 @@
-channel: fast-3.x
+installOpenShiftAiOperator:
+  operators:
+    rhods-operator:
+      channel: fast-3.x
+      startingCSV: rhods-operator.3.2.0
+      installPlanApproval: Manual
 
 dataScienceCluster:
-  components: 
+  components:
     llamastackoperator:
       managementState: Managed
-    trainingoperator: 
+    trainingoperator:
       managementState: Removed
 
 dataScienceClusterInitialization: null
 
 dashboardConfig:
-   disableModelRegistry: false
-   disableModelCatalog: false
-   disableKServeMetrics: false
-   genAiStudio: true
-   modelAsService: true
-   disableLMEval: false
+  disableModelRegistry: false
+  disableModelCatalog: false
+  disableKServeMetrics: false
+  genAiStudio: true
+  modelAsService: true
+  disableLMEval: false
 
 modelServerSizes: null
 
