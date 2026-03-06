@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: openshift-ai
+  name: openshift-ai-operator
   namespace: openshift-gitops
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,12 +12,12 @@ spec:
     namespace: redhat-ods-operator
   project: default
   sources:
-  - path: charts/openshift-ai
+  - path: charts/install-operators
     repoURL: https://github.com/jharmison-redhat/openshift-setup
     targetRevision: a751243da77b5fc15dff12c6bba4f8990783a06d
     helm:
       valueFiles:
-        - $values/deployments/openshift-ai/values.yaml
+        - $values/deployments/openshift-ai-operator/values.yaml
   - repoURL: {{ .Values.bootstrap.repoURL }}
     targetRevision: {{ .Values.bootstrap.targetRevision }}
     ref: values
@@ -25,3 +25,10 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      annotations:
+        openshift.io/cluster-monitoring: 'true'
+      labels:
+        argocd.argoproj.io/managed-by: openshift-gitops
