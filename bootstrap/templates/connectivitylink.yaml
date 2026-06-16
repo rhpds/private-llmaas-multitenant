@@ -12,9 +12,16 @@ spec:
     name: in-cluster
   project: default
   source:
-    path: deployments/rhcl-operator
-    repoURL: {{ .Values.bootstrap.repoURL }}
-    targetRevision: {{ .Values.bootstrap.targetRevision }}
+    path: charts/rhcl
+    repoURL: https://github.com/jharmison-redhat/openshift-setup
+    targetRevision: f27385fcac8ec5e67dc5c838a6029fb751e21e06
+    helm:
+      valuesObject:
+        kuadrant:
+          spec: null
+        authorino:
+          overwrite: false
+          serviceTls: false
   syncPolicy:
     automated:
       prune: true
