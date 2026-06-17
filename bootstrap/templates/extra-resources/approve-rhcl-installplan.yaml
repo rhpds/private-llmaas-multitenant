@@ -48,38 +48,30 @@ spec:
       - name: approve
         image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
         imagePullPolicy: IfNotPresent
-        command:
-        - /bin/bash
-        - -c
+        command: ["/bin/bash", "-c"]
+        args:
         - |
           set -euo pipefail
           TARGET_CSV="rhcl-operator.v1.3.4"
-          NAMESPACE="kuadrant-system"
+          NS="kuadrant-system"
 
-          echo "Waiting for RHCL subscription in $NAMESPACE..."
-          until oc get subscription rhcl-operator -n "$NAMESPACE" &>/dev/null; do
-            echo "  waiting for subscription..."; sleep 10
+          echo "Waiting for RHCL subscription in $NS..."
+          until oc get subscription rhcl-operator -n "$NS" &>/dev/null; do
+            echo "  waiting..."; sleep 10
           done
 
-          echo "Looking for install plan containing $TARGET_CSV..."
+          echo "Looking for unapproved install plan containing $TARGET_CSV..."
           for i in $(seq 1 60); do
-            PLAN=$(oc get installplan -n "$NAMESPACE" -o json | \
-              python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-for item in data.get('items', []):
-    csvs = item.get('spec', {}).get('clusterServiceVersionNames', [])
-    if '$TARGET_CSV' in csvs and not item.get('spec', {}).get('approved', False):
-        print(item['metadata']['name'])
-        break
-" 2>/dev/null)
-            if [ -n "$PLAN" ]; then
-              echo "Approving install plan: $PLAN"
-              oc patch installplan "$PLAN" -n "$NAMESPACE" \
-                --type=merge -p '{"spec":{"approved":true}}'
-              echo "Done — $TARGET_CSV install plan approved."
-              exit 0
-            fi
+            for plan in $(oc get installplan -n "$NS" -o jsonpath='{.items[*].metadata.name}'); do
+              csvs=$(oc get installplan "$plan" -n "$NS" -o jsonpath='{.spec.clusterServiceVersionNames}')
+              approved=$(oc get installplan "$plan" -n "$NS" -o jsonpath='{.spec.approved}')
+              if echo "$csvs" | grep -q "$TARGET_CSV" && [ "$approved" = "false" ]; then
+                echo "Approving install plan: $plan"
+                oc patch installplan "$plan" -n "$NS" --type=merge -p '{"spec":{"approved":true}}'
+                echo "Done."
+                exit 0
+              fi
+            done
             echo "  attempt $i/60: no pending plan yet, waiting 10s..."
             sleep 10
           done
