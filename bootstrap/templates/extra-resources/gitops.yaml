@@ -12,24 +12,3 @@ metadata:
   namespace: openshift-gitops
 spec:
   resourceTrackingMethod: annotation
-  resourceCustomizations: |
-    operators.coreos.com/Subscription:
-      health.lua: |
-        hs = {}
-        if obj.status ~= nil then
-          if obj.status.state == "AtLatestKnown" then
-            hs.status = "Healthy"
-            hs.message = obj.status.state
-          elseif obj.status.state == "UpgradePending" and obj.spec.installPlanApproval == "Manual" then
-            hs.status = "Healthy"
-            hs.message = "Pinned to " .. (obj.status.installedCSV or "unknown") .. " — upgrade pending manual approval"
-          elseif obj.status.state ~= nil then
-            hs.status = "Progressing"
-            hs.message = obj.status.state
-          end
-        end
-        if hs.status == nil then
-          hs.status = "Progressing"
-          hs.message = "Waiting for subscription status"
-        end
-        return hs
