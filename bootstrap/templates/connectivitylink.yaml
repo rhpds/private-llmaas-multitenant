@@ -13,8 +13,8 @@ spec:
   project: default
   source:
     path: charts/rhcl
-    repoURL: https://github.com/jharmison-redhat/openshift-setup
-    targetRevision: f27385fcac8ec5e67dc5c838a6029fb751e21e06
+    repoURL: https://github.com/ritzshah/openshift-setup
+    targetRevision: fix/approve-operator-break-template
     helm:
       valuesObject:
         kuadrant:
