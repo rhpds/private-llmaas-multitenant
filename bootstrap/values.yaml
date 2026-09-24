@@ -5,7 +5,7 @@ bootstrap:
   # Git repository URL
   repoURL: https://github.com/rhpds/private-llmaas-multitenant
   # Branch or tag to use
-  targetRevision: taylor-testing
+  targetRevision: feat/update-to-3.5
 
 user:
   count: 5
