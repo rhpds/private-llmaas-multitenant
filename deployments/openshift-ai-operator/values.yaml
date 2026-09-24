@@ -1,9 +1,9 @@
 operators:
   rhods-operator:
-    channel: fast-3.x
+    channel: stable-3.5
     ownSubscription: false
     namespace: redhat-ods-operator
-    startingCSV: rhods-operator.3.2.0
+    startingCSV: rhods-operator.3.5.1
     installPlanApproval: Manual
     operatorGroup:
       enabled: true

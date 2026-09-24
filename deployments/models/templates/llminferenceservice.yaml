@@ -4,7 +4,6 @@ apiVersion: serving.kserve.io/v1alpha1
 kind: LLMInferenceService
 metadata:
   annotations:
-    alpha.maas.opendatahub.io/tiers: '["free", "premium", "enterprise"]'
     openshift.io/display-name: {{ .displayName }}
   labels:
     opendatahub.io/dashboard: "true"
@@ -64,4 +63,14 @@ spec:
         medium: Memory
         sizeLimit: 2Gi
       name: shm
+---
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSModelRef
+metadata:
+  name: {{ .name }}
+  namespace: llm
+spec:
+  modelRef:
+    kind: LLMInferenceService
+    name: {{ .name }}
 {{- end }}

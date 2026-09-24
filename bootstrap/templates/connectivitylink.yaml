@@ -14,7 +14,7 @@ spec:
   source:
     path: charts/rhcl
     repoURL: https://github.com/jharmison-redhat/openshift-setup
-    targetRevision: 70d65922210a32179b9a719e7ca932777784b03d
+    targetRevision: f6beed4b481d5345397fdbd8f6749c846181ee1e
     helm:
       valuesObject:
         kuadrant:

@@ -1,6 +1,6 @@
 dataScienceCluster:
   components:
-    llamastackoperator:
+    ogx:
       managementState: Managed
     trainingoperator:
       managementState: Removed

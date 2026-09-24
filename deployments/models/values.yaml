@@ -1,4 +1,4 @@
-image: registry.redhat.io/rhaiis/vllm-cuda-rhel9:3.2.5
+image: registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5.1
 
 models:
   - name: qwen3-4b-instruct

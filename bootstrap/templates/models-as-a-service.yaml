@@ -14,7 +14,7 @@ spec:
   source:
     path: deployment/overlays/openshift
     repoURL: https://github.com/opendatahub-io/models-as-a-service.git
-    targetRevision: 39e62e98f382621e401211ae21cb9de0601b8266
+    targetRevision: 8ee0617b3aa3efb0dad62a3a7f8a7f9e809948b0
     kustomize:
       patches:
         - target:
@@ -25,18 +25,8 @@ spec:
               path: /spec/listeners/0/hostname
               value: maas.{{ .Values.deployer.domain }}
             - op: replace
-              path: /spec/listeners/1/hostname
-              value: maas.{{ .Values.deployer.domain }}
-            - op: replace
-              path: /spec/listeners/1/tls/certificateRefs/0/name
+              path: /spec/listeners/0/tls/certificateRefs/0/name
               value: cert-manager-ingress-cert
-        - target:
-            kind: Deployment
-            name: maas-api
-          patch: |-
-            - op: replace
-              path: /spec/template/spec/containers/0/image
-              value: quay.io/opendatahub/maas-api:latest-0681979
   syncPolicy:
     automated:
       prune: true
