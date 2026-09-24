@@ -1,0 +1,27 @@
+serviceAccount:
+  name: rhoai-extras
+
+image: registry.redhat.io/openshift4/ose-cli:latest
+
+backoffLimit: 10
+
+dashboard:
+  # ~25 min at 60s intervals, plus a little headroom
+  pollAttempts: 25
+  pollInterval: 60
+  patch: '{"spec":{"observability":{"enabled":true,"persesService":{"name":"data-science-perses","namespace":"redhat-ods-monitoring","port":8080}}}}'
+
+kuadrant:
+  namespace: kuadrant-system
+  name: kuadrant
+  # pods in the OLM-managed kuadrant controller-manager deployment
+  podNamespace: openshift-operators
+  podSelector: control-plane=controller-manager,app=kuadrant
+
+authorino:
+  namespace: kuadrant-system
+  name: authorino
+  caPath: /etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt
+  # ~25 min at 60s intervals, plus a little headroom
+  pollAttempts: 25
+  pollInterval: 60

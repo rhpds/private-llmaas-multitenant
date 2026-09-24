@@ -1,0 +1,12 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSAuthPolicy
+metadata:
+  name: maas-workshop-access
+  namespace: models-as-a-service
+spec:
+  modelRefs:
+    - name: {{ .Values.modelName }}
+      namespace: llm
+  subjects:
+    groups:
+      - tier-premium-users

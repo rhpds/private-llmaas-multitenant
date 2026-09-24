@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: job-authorino-ssl-env
+data:
+  run.sh: |-
+    #!/bin/bash
+    set -euo pipefail
+
+    NS={{ .Values.authorino.namespace }}
+    NAME={{ .Values.authorino.name }}
+    CA_PATH={{ .Values.authorino.caPath }}
+
+    # Wait for the authorino deployment (kuadrant-operator creates it, ~25 min max)
+    for i in $(seq 1 {{ .Values.authorino.pollAttempts }}); do
+      if oc get deployment "${NAME}" -n "${NS}" >/dev/null 2>&1; then
+        break
+      fi
+      echo "attempt ${i}: deployment ${NAME} not found yet; sleeping {{ .Values.authorino.pollInterval }}s"
+      sleep {{ .Values.authorino.pollInterval }}
+    done
+
+    oc get deployment "${NAME}" -n "${NS}" >/dev/null
+
+    # Idempotent: only set env (and trigger a rollout) when a value is missing or wrong
+    NEEDS_UPDATE=0
+    for VAR in SSL_CERT_FILE REQUESTS_CA_BUNDLE; do
+      CURRENT="$(oc get deployment "${NAME}" -n "${NS}" -o jsonpath="{.spec.template.spec.containers[0].env[?(@.name=='${VAR}')].value}")"
+      if [ "${CURRENT}" != "${CA_PATH}" ]; then
+        echo "${VAR} is '${CURRENT:-<unset>}', want '${CA_PATH}'"
+        NEEDS_UPDATE=1
+      fi
+    done
+
+    if [ "${NEEDS_UPDATE}" = "0" ]; then
+      echo "authorino SSL env vars already set; nothing to do"
+      exit 0
+    fi
+
+    oc set env deployment/"${NAME}" -n "${NS}" \
+      SSL_CERT_FILE="${CA_PATH}" \
+      REQUESTS_CA_BUNDLE="${CA_PATH}"
+    echo "authorino SSL env vars set"

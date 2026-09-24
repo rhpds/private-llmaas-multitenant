@@ -1,0 +1,16 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSSubscription
+metadata:
+  name: maas-workshop-premium
+  namespace: models-as-a-service
+spec:
+  owner:
+    groups:
+      - tier-premium-users
+  modelRefs:
+    - name: {{ .Values.modelName }}
+      namespace: llm
+      tokenRateLimits:
+        - limit: 100000
+          window: 1m
+  priority: 20

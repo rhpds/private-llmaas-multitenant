@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: job-enable-observability-dashboard
+data:
+  run.sh: |-
+    #!/bin/bash
+    set -euo pipefail
+
+    DASHBOARD=default-dashboard
+    PATCH='{{ .Values.dashboard.patch }}'
+
+    # Wait for the DSCI to create the cluster-scoped default-dashboard (~25 min max)
+    for i in $(seq 1 {{ .Values.dashboard.pollAttempts }}); do
+      if oc get dashboard "${DASHBOARD}" >/dev/null 2>&1; then
+        break
+      fi
+      echo "attempt ${i}: dashboard ${DASHBOARD} not found yet; sleeping {{ .Values.dashboard.pollInterval }}s"
+      sleep {{ .Values.dashboard.pollInterval }}
+    done
+
+    oc get dashboard "${DASHBOARD}" >/dev/null
+
+    # Idempotent: only patch when observability is not already enabled
+    if [ "$(oc get dashboard "${DASHBOARD}" -o jsonpath='{.spec.observability.enabled}')" = "true" ]; then
+      echo "dashboard ${DASHBOARD} observability already enabled; nothing to do"
+      exit 0
+    fi
+
+    oc patch dashboard "${DASHBOARD}" --type merge -p "${PATCH}"
+    echo "dashboard ${DASHBOARD} observability enabled"

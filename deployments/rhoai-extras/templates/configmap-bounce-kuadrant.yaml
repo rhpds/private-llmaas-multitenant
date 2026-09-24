@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: job-bounce-kuadrant
+data:
+  run.sh: |-
+    #!/bin/bash
+    set -euo pipefail
+
+    KUADRANT_NS={{ .Values.kuadrant.namespace }}
+    KUADRANT_NAME={{ .Values.kuadrant.name }}
+    POD_NS={{ .Values.kuadrant.podNamespace }}
+    POD_SELECTOR="{{ .Values.kuadrant.podSelector }}"
+
+    # E1 remedy: the kuadrant operator caches a failed dependency probe at
+    # startup; bounce its pods only when the Kuadrant CR is not healthy.
+    READY="$(oc get kuadrant "${KUADRANT_NAME}" -n "${KUADRANT_NS}" -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}' 2>/dev/null || true)"
+    ACCEPTED="$(oc get kuadrant "${KUADRANT_NAME}" -n "${KUADRANT_NS}" -o jsonpath='{.status.conditions[?(@.type=="Accepted")].status}' 2>/dev/null || true)"
+
+    if [ "${READY}" = "True" ] || [ "${ACCEPTED}" = "True" ]; then
+      echo "kuadrant ${KUADRANT_NAME} is healthy (Ready=${READY} Accepted=${ACCEPTED}); not bouncing"
+      exit 0
+    fi
+
+    echo "kuadrant ${KUADRANT_NAME} not healthy (Ready=${READY} Accepted=${ACCEPTED}); bouncing operator pods"
+    oc delete pods -n "${POD_NS}" -l "${POD_SELECTOR}"

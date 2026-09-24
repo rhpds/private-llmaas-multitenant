@@ -1,0 +1,6 @@
+apiVersion: v2
+name: rhoai-extras
+description: Post-install hook Jobs for RHOAI 3.5 remediation (dashboard observability, Kuadrant bounce, Authorino SSL env)
+type: application
+version: 0.1.0
+appVersion: 3.5.1
