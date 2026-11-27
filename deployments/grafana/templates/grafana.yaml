@@ -25,6 +25,14 @@ spec:
       org_role: Admin
     auth.basic:
       enabled: 'false'
+  # Grafana 13 ships core datasource plugins (prometheus, loki, tempo, ...) in
+  # /usr/share/grafana/data/plugins-bundled and a background installer installs
+  # them into the plugins dir at startup. The operator's default container
+  # security context sets readOnlyRootFilesystem: true, which makes that
+  # installer fail ("unlinkat ... read-only file system") for every bundled
+  # datasource. The Prometheus datasource then never registers
+  # ("plugin.notRegistered") and all dashboard panels show no data.
+  disableDefaultSecurityContext: Container
   deployment:
     spec:
       template:
